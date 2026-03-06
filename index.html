@@ -57,55 +57,16 @@
         }
 
         .coming-soon {
-            font-size: clamp(1.4rem, 4vw, 2.2rem);
-            font-weight: 700;
-            color: #1a1a1a;
-            letter-spacing: 0.25em;
+            font-size: clamp(1.2rem, 3.5vw, 1.8rem);
+            font-weight: 600;
+            color: #2B4A3F;
+            letter-spacing: 0.35em;
             text-transform: uppercase;
-        }
-
-        /* ── Countdown Timer ── */
-        .timer {
-            margin-top: 1.8rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: clamp(0.6rem, 2.5vw, 1.6rem);
-        }
-
-        .timer-block {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .timer-value {
-            font-size: clamp(1.6rem, 5vw, 2.8rem);
-            font-weight: 700;
-            color: #1a1a1a;
-            line-height: 1;
-            font-variant-numeric: tabular-nums;
-        }
-
-        .timer-label {
-            margin-top: 0.35rem;
-            font-size: clamp(0.5rem, 1.3vw, 0.7rem);
-            font-weight: 400;
-            color: #888;
-            text-transform: uppercase;
-            letter-spacing: 0.15em;
-        }
-
-        .timer-sep {
-            font-size: clamp(1.2rem, 3.5vw, 2rem);
-            font-weight: 300;
-            color: #bbb;
-            padding-bottom: 1rem;
         }
 
         /* ── Socials ── */
         .socials {
-            margin-top: 2rem;
+            margin-top: 1.8rem;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -152,28 +113,6 @@
     <div class="content" id="content">
         <h1 class="coming-soon">Coming Soon</h1>
 
-        <div class="timer" id="timer">
-            <div class="timer-block">
-                <span class="timer-value" id="days">00</span>
-                <span class="timer-label">Days</span>
-            </div>
-            <span class="timer-sep">:</span>
-            <div class="timer-block">
-                <span class="timer-value" id="hours">00</span>
-                <span class="timer-label">Hours</span>
-            </div>
-            <span class="timer-sep">:</span>
-            <div class="timer-block">
-                <span class="timer-value" id="minutes">00</span>
-                <span class="timer-label">Min</span>
-            </div>
-            <span class="timer-sep">:</span>
-            <div class="timer-block">
-                <span class="timer-value" id="seconds">00</span>
-                <span class="timer-label">Sec</span>
-            </div>
-        </div>
-
         <div class="socials">
             <!-- Instagram -->
             <a href="https://instagram.com/arionis" target="_blank" rel="noopener" aria-label="Instagram">
@@ -218,9 +157,13 @@
             } catch (e) { /* CORS fallback: keep default */ }
         });
 
-        // Show content when video ends
-        video.addEventListener('ended', () => {
-            content.classList.add('visible');
+        // Show content at 80% of video duration (20% earlier)
+        let contentShown = false;
+        video.addEventListener('timeupdate', () => {
+            if (!contentShown && video.duration && video.currentTime >= video.duration * 0.8) {
+                contentShown = true;
+                content.classList.add('visible');
+            }
         });
 
         // Fallback: if video can't play, show content immediately
@@ -228,27 +171,6 @@
             video.style.display = 'none';
             content.classList.add('visible');
         });
-
-        // ── Countdown Timer (7 days from March 6, 2026) ──
-        const targetDate = new Date('2026-03-13T00:00:00').getTime();
-
-        function updateTimer() {
-            const now = Date.now();
-            const diff = Math.max(0, targetDate - now);
-
-            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-
-            document.getElementById('days').textContent = String(days).padStart(2, '0');
-            document.getElementById('hours').textContent = String(hours).padStart(2, '0');
-            document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
-            document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
-        }
-
-        updateTimer();
-        setInterval(updateTimer, 1000);
     </script>
 </body>
 </html>

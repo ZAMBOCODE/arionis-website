@@ -160,7 +160,7 @@
         // Show content at 80% of video duration (20% earlier)
         let contentShown = false;
         video.addEventListener('timeupdate', () => {
-            if (!contentShown && video.duration && video.currentTime >= video.duration * 0.8) {
+            if (!contentShown && video.duration && video.currentTime >= video.duration * 0.6) {
                 contentShown = true;
                 content.classList.add('visible');
             }
